@@ -2,27 +2,14 @@ pipeline {
     agent any
 
     tools {
-        maven 'Maven'  // Name must match Maven installation in Jenkins Global Tool Config
-        jdk 'JDK'      // Name must match JDK installation in Jenkins Global Tool Config
-    }
-
-    environment {
-        // Set ChromeDriver path if not set globally or using Docker image with it pre-installed
-        CHROMEDRIVER_PATH = "/usr/local/bin/chromedriver"
+        maven 'Maven'  // Replace with actual tool names from Jenkins configuration
+        jdk 'JDK'
     }
 
     stages {
         stage('Checkout') {
             steps {
-                // Clone your GitHub repo's master branch
-                git branch: 'master', url: 'https://github.com/VinayLR15/SeleniumApp.git'
-            }
-        }
-
-        stage('Set Permissions (Optional)') {
-            steps {
-                // Ensure ChromeDriver is executable
-                sh 'chmod +x ${CHROMEDRIVER_PATH}'
+                checkout scm
             }
         }
 
@@ -34,25 +21,23 @@ pipeline {
 
         stage('Test') {
             steps {
-                // If you have actual test cases under src/test, they run here
                 sh 'mvn test'
             }
         }
 
-        stage('Run Selenium Application') {
+        stage('Archive Artifacts') {
             steps {
-                // Runs your Selenium-based Java main class
-                sh 'mvn exec:java -Dexec.mainClass="com.example.App"'
+                archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
             }
         }
     }
 
     post {
         success {
-            echo '🎉 Pipeline completed successfully!'
+            echo 'Pipeline completed successfully!'
         }
         failure {
-            echo '❌ Pipeline failed!'
+            echo 'Pipeline failed!'
         }
     }
 }
