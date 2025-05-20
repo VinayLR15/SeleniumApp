@@ -15,7 +15,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Clone your GitHub repo's master branch
-                git branch: 'master', url: 'https://github.com/ShashiMadari/MymavenSelenum.git'
+                git branch: 'master', url: 'https://github.com/VinayLR15/SeleniumApp.git'
             }
         }
 
